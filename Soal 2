@@ -1,1 +1,65 @@
+#include <iostream>
+#include <algorithm> 
+#include <math.h>
+using namespace std;
+
+int main(){
+
+    int n;
+    int x;
+    int kursi;
+
+
+    cout << "Masukkan jumlah kursi yang tersedia dari 200 kursi : ";
+    cin >> n;
+    
+    int data[n];
+    cout << "\nNomor kursi yang tersedia (ascending) : ";
+    for (int i = 0; i < n; i++) {
+        cin >> data[i];
+    }
+
+    sort(data, data + n);
+
+    cout << "\nData setelah diurutkan: ";
+    for (int i = 0; i < n; i++) {
+        cout << data[i] << " ";
+    }
+    cout << endl;
+
+
+    cout << "\nMencari kursi nomor :"<<endl;
+    cin >> x;
+
+    
+    int low = 0, high = n - 1, flag = 0;
+    int posisi;
+    float posisi1;
+
+    // Proses Interpolation Search
+    while(low <= high && x >= data[low] && x <= data[high]){
+        posisi1 = (float)(x - data[low]) / (data[high] - data[low]) * (high - low) + low;
+        posisi = floor(posisi1);
+
+        if(data[posisi] == x) {
+            kursi = 1;
+            break;
+        }
+
+        if(data[posisi] > x)
+            high = posisi - 1;
+        else
+            low = posisi + 1;
+    }
+    
+    if (kursi == 1) {
+        cout << "\n STATUS : Tersedia";
+        cout << "\n Detail : Ditemukan pada index ke-" << posisi;
+    }
+    else {
+        cout << "STATUS : Tidak Tersedia";
+    }
+
+}
+
 
