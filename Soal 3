@@ -1,1 +1,83 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int arr[node];
+int cost;
+
+map<string, vector<pair<string,int>>> graph;
+
+// Dijkstra
+void dijkstra(string start, string finish) {
+    map<string, int> dist;
+    map<string, string> parent;
+    priority_queue<pair<int,string>, vector<pair<int,string>>, greater<pair<int,string>>> pq;
+
+    // Inisialisasi awal
+    for (auto &g : graph) dist[g.first] = INT_MAX;
+    dist[start] = 0;
+    pq.push({0, start});
+
+    while (!pq.empty()) {
+        auto [cost, node] = pq.top(); 
+        pq.pop();
+
+        if (cost > dist[node]) continue;
+
+        for (auto &edge : graph[node]) {
+            string next = edge.first;
+            int weight = edge.second;
+
+            if (dist[node] + weight < dist[next]) {
+                dist[next] = dist[node] + weight;
+                parent[next] = node;
+                pq.push({dist[next], next});
+            }
+        }
+    }
+
+    // Rekonstruksi jalur
+    if (dist[finish] == INT_MAX) {
+        cout << "Tidak ada jalur.\n";
+        return;
+    }
+
+    vector<string> path;
+    string cur = finish;
+    while (cur != start) {
+        path.push_back(cur);
+        cur = parent[cur];
+    }
+    path.push_back(start);
+    reverse(path.begin(), path.end());
+
+    cout << "Jalur terpendek: ";
+    for (int i = 0; i < path.size(); i++) {
+        cout << path[i];
+        if (i < path.size() - 1) cout << " -> ";
+    }
+    cout << "\nTotal jarak: " << dist[finish] << " km\n";
+}
+
+int main() {
+    // Graph dari soal
+    graph = {
+        {"Medan", "Tebing Tinggi", 70},
+        {"Medan", "Brastagi", 60},
+        {"Tebing Tinggi", "Pematang Siantar", 50},
+        {"Brastagi", "Sidikalang", 90},
+        {"Brastagi", "Pematang Siantar", 80},
+        {"Pematang siantar", "Prapat", 45},
+        {"Pematang siantar", "Sidikalang", 65},
+        {"Sidikalang", "Prapat", 120}
+    };
+
+    string start, finish;
+    cout << "Vertex asal: ";
+    getline(cin, start);
+    cout << "Vertex tujuan: ";
+    getline(cin, finish);
+
+
+    dijkstra(start, finish);
+}
 
